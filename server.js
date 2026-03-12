@@ -3,29 +3,24 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const app = express();
 
-// --- CONFIGURACIÓN (Crucial para que no falle) ---
-const SECRET_KEY = "tu_clave_secreta_super_segura"; // Asegúrate de que esta línea exista
+const SECRET_KEY = "tu_clave_secreta_super_segura";
 
-app.use(express.json()); // Para leer el body JSON
-app.use(cookieParser()); // Para leer las cookies
-app.use(express.static("public")); // Para servir tu index.html
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.static("public"));
 
-// --- RUTAS ---
 app.post("/login", (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Validación simple
     if (username === "admin" && password === "1234") {
-      // Creamos el token
       const token = jwt.sign({ user: username }, SECRET_KEY, {
         expiresIn: "1h",
       });
 
-      // Enviamos la cookie
       res.cookie("token", token, {
         httpOnly: true,
-        secure: false, // Windows 11 local (http) requiere false
+        secure: false,
         sameSite: "strict",
         maxAge: 3600000,
       });
@@ -44,7 +39,6 @@ app.post("/login", (req, res) => {
   }
 });
 
-// Ruta protegida (ISIP06)
 app.get("/perfil", (req, res) => {
   const token = req.cookies.token;
   if (!token) return res.status(401).json({ error: "No hay token" });

@@ -13,7 +13,7 @@
       <button onclick="login()">Iniciar Sesión</button>
       <hr />
       <button style="background: #28a745" onclick="getPerfil()">
-        Obtener Datos Protegidos
+        Pedir Datos Protegidos
       </button>
 
       <div id="mensaje"></div>
@@ -35,12 +35,10 @@
         const data = await res.json();
 
         if (res.ok) {
-          // Indicación visual de creación
           mensajeDiv.innerHTML = `
             <div style="background: #d4edda; padding: 10px; border-radius: 5px; border: 1px solid #c3e6cb;">
-                ✅ <strong>Cookie Creada</strong><br>
+                <strong>Cookie Creada</strong><br>
                 <small>Hora: ${data.timestamp}</small><br>
-                <p>El servidor ha enviado el Header 'Set-Cookie'.</p>
             </div>
         `;
         } else {
@@ -50,10 +48,8 @@
       }
 
       async function getPerfil() {
-        // Al usar Cookies, el navegador envía el token automáticamente
         const res = await fetch("/perfil");
         const data = await res.json();
-
         if (res.ok) {
           mensajeDiv.innerText =
             "Datos: " + data.data + " para " + data.user.user;
