@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Práctica JWT - ISIP06</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="card">
+      <h2>Login Seguro (JWT)</h2>
+      <input type="text" id="user" placeholder="Usuario (admin)" />
+      <input type="password" id="pass" placeholder="Contraseña (1234)" />
+      <button onclick="login()">Iniciar Sesión</button>
+      <hr />
+      <button style="background: #28a745" onclick="getPerfil()">
+        Obtener Datos Protegidos
+      </button>
+
+      <div id="mensaje"></div>
+    </div>
+
+    <script>
+      const mensajeDiv = document.getElementById("mensaje");
+
+      async function login() {
+        const username = document.getElementById("user").value;
+        const password = document.getElementById("pass").value;
+
+        const res = await fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          // Indicación visual de creación
+          mensajeDiv.innerHTML = `
+            <div style="background: #d4edda; padding: 10px; border-radius: 5px; border: 1px solid #c3e6cb;">
+                ✅ <strong>Cookie Creada</strong><br>
+                <small>Hora: ${data.timestamp}</small><br>
+                <p>El servidor ha enviado el Header 'Set-Cookie'.</p>
+            </div>
+        `;
+        } else {
+          mensajeDiv.innerText = "Error: " + data.error;
+          mensajeDiv.style.color = "red";
+        }
+      }
+
+      async function getPerfil() {
+        // Al usar Cookies, el navegador envía el token automáticamente
+        const res = await fetch("/perfil");
+        const data = await res.json();
+
+        if (res.ok) {
+          mensajeDiv.innerText =
+            "Datos: " + data.data + " para " + data.user.user;
+          mensajeDiv.style.color = "blue";
+        } else {
+          mensajeDiv.innerText = "No autorizado: " + data.error;
+          mensajeDiv.style.color = "red";
+        }
+      }
+    </script>
+  </body>
+</html>

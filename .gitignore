@@ -1,0 +1,21 @@
+# Dependencias (ISIP05 - Gestión de herramientas)
+# No se suben porque se regeneran con 'npm install'
+node_modules/
+dist/
+
+# Archivos de entorno y secretos (ISIP03 - Seguridad)
+# Aquí es donde guardarías tu SECRET_KEY en el futuro
+.env
+.env.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos del sistema operativo (Windows 11)
+Thumbs.db
+desktop.ini
+
+# Configuración de VS Code
+.vscode/
