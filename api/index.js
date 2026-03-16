@@ -7,9 +7,11 @@ const SECRET_KEY = "tu_clave_secreta_super_segura";
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static("public"));
 
-app.post("/login", (req, res) => {
+// En Vercel no usamos app.use(express.static("public")),
+// de eso se encarga el archivo vercel.json.
+
+app.post("/api/login", (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -20,12 +22,11 @@ app.post("/login", (req, res) => {
 
       res.cookie("token", token, {
         httpOnly: true,
-        secure: false,
+        secure: true, // Cambiado a true para producción (HTTPS)
         sameSite: "strict",
         maxAge: 3600000,
       });
 
-      console.log(`[AUTH] Token generado para: ${username}`);
       return res.json({
         message: "Login exitoso",
         timestamp: new Date().toLocaleString(),
@@ -34,12 +35,11 @@ app.post("/login", (req, res) => {
 
     res.status(401).json({ error: "Credenciales incorrectas" });
   } catch (error) {
-    console.error("Error en el servidor:", error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 
-app.get("/perfil", (req, res) => {
+app.get("/api/perfil", (req, res) => {
   const token = req.cookies.token;
   if (!token) return res.status(401).json({ error: "No hay token" });
 
@@ -49,6 +49,5 @@ app.get("/perfil", (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log("Servidor corriendo en http://localhost:3000");
-});
+// Exportamos la app para Vercel
+module.exports = app;

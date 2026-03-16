@@ -8,8 +8,18 @@
   <body>
     <div class="card">
       <h2>Login (JWT)</h2>
-      <input type="text" id="user" placeholder="Usuario (admin)" />
-      <input type="password" id="pass" placeholder="Contraseña (1234)" />
+      <input
+        type="text"
+        id="user"
+        placeholder="Usuario (admin)"
+        value="admin"
+      />
+      <input
+        type="password"
+        id="pass"
+        placeholder="Contraseña (1234)"
+        value="1234"
+      />
       <button onclick="login()">Iniciar Sesión</button>
       <hr />
       <button style="background: #28a745" onclick="getPerfil()">
@@ -26,7 +36,7 @@
         const username = document.getElementById("user").value;
         const password = document.getElementById("pass").value;
 
-        const res = await fetch("/login", {
+        const res = await fetch("/api/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password }),
@@ -48,11 +58,10 @@
       }
 
       async function getPerfil() {
-        const res = await fetch("/perfil");
+        const res = await fetch("/api/perfil");
         const data = await res.json();
         if (res.ok) {
-          mensajeDiv.innerText =
-            "Datos: " + data.data + " para " + data.user.user;
+          mensajeDiv.innerText = data.data + " para " + data.user.user;
           mensajeDiv.style.color = "blue";
         } else {
           mensajeDiv.innerText = "No autorizado: " + data.error;
